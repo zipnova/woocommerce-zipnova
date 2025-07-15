@@ -21,6 +21,9 @@ function update_order_meta($order_id)
     if (!$order) return false;
 
     $chosen_shipping_method = WC()->session->get('chosen_shipping_methods');
+    if(!$chosen_shipping_method) {
+	return false;
+    }
     $chosen_shipping_method = reset($chosen_shipping_method);
     $chosen_shipping_method = explode("|", $chosen_shipping_method);
     $chosen_shipping_method[0] = explode(":", $chosen_shipping_method[0])[0];
@@ -73,6 +76,9 @@ function process_order_status($order_id, $old_status, $new_status)
     }
 
     $order_shipping_methods = $order->get_items('shipping');
+    if(!$order_shipping_methods) {
+	return false;
+    }
     $order_shipping_method = reset($order_shipping_methods);
     $shipment_creation_trigger_status = get_option('zippin_shipping_status');
 
