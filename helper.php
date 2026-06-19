@@ -254,9 +254,12 @@ class Helper
     {
         $address = Helper::get_address($order);
 
-        // Compatibilidad con facturante para obtener el DNI
-        if (!empty($order->billing_dni_facturante)) {
-            $customer_document = $order->billing_dni_facturante;
+        $customer_document = '';
+
+        // Compatibilidad con facturante para obtener el DNI (compatible con HPOS)
+        $facturante_document = $order->get_meta('billing_dni_facturante');
+        if (!empty($facturante_document)) {
+            $customer_document = $facturante_document;
         }
 
         // Compatibilidad con Contabilium para obtener el documento
@@ -265,10 +268,13 @@ class Helper
             $customer_document = $contabilium_document;
         }
 
-        // Si esta definido en el plugin, usar el campo personalizado de la orden
+        // Si esta definido en el plugin, usar el campo personalizado de la orden (compatible con HPOS)
         $zippin_document_field = get_option('zippin_document_field');
-        if (!empty($order->$zippin_document_field)) {
-            $customer_document = $order->$zippin_document_field;
+        if (!empty($zippin_document_field)) {
+            $field_value = $order->get_meta($zippin_document_field);
+            if (!empty($field_value)) {
+                $customer_document = $field_value;
+            }
         }
 
         if (empty($customer_document)) {

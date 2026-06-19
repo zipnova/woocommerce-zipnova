@@ -20,8 +20,13 @@ function update_order_meta($order_id)
     $order = wc_get_order($order_id);
     if (!$order) return false;
 
-    $chosen_shipping_method = WC()->session->get('chosen_shipping_methods');
-    $chosen_shipping_method = reset($chosen_shipping_method);
+    $chosen_shipping_methods = WC()->session ? WC()->session->get('chosen_shipping_methods') : null;
+    
+    if (empty($chosen_shipping_methods) || !is_array($chosen_shipping_methods)) {
+        return false;
+    }
+
+    $chosen_shipping_method = reset($chosen_shipping_methods);
     $chosen_shipping_method = explode("|", $chosen_shipping_method);
     $chosen_shipping_method[0] = explode(":", $chosen_shipping_method[0])[0];
 
@@ -66,18 +71,19 @@ function update_order_meta($order_id)
 function process_order_status($order_id, $old_status, $new_status)
 {
     $order = wc_get_order($order_id);
-
-    if (WC()->session && !$order->get_meta('zippin_shipping_info', true)) {
-        update_order_meta($order_id);
-        $order = wc_get_order($order_id);
-    }
+    if (!$order) return false;
 
     $order_shipping_methods = $order->get_items('shipping');
     $order_shipping_method = reset($order_shipping_methods);
     $shipment_creation_trigger_status = get_option('zippin_shipping_status');
 
-    if (!$order || !$shipment_creation_trigger_status || !$order_shipping_method) return false;
+    if (!$shipment_creation_trigger_status || !$order_shipping_method) return false;
     if (!in_array($order_shipping_method->get_method_id(), ['zippin','free_shipping'])) return false;
+
+    if (WC()->session && !$order->get_meta('zippin_shipping_info', true)) {
+        update_order_meta($order_id);
+        $order = wc_get_order($order_id);
+    }
 
     if ($order->get_meta('zippin_shipment', true)) {
         // Ya hay un envío creado
