@@ -300,7 +300,9 @@ class ZippinConnector
             $headers['Accept'] = 'application/json';
             $headers['Authorization'] = 'Basic '.base64_encode($this->get_api_key().':'.$this->get_api_secret());
 
-            $url = 'https://api.'.$zippin_domain['domain'].'/v2' . $endpoint;
+            $url = (defined('ZIPNOVA_API_BASE_URL') && ZIPNOVA_API_BASE_URL)
+                ? ZIPNOVA_API_BASE_URL . '/v2' . $endpoint
+                : 'https://api.'.$zippin_domain['domain'].'/v2' . $endpoint;
             $args = array(
                 'headers' => $headers,
                 'timeout' => 25
