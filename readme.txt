@@ -5,7 +5,7 @@ Tags: envios, zipnova, zippin, shipping, woocommerce
 Requires at least: 4.6
 Tested up to: 6.7.2
 Requires PHP: 7
-Stable tag: 2.5
+Stable tag: 2.6
 Language: Spanish
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -58,6 +58,11 @@ Podrás hacer envíos con transportes de Argentina, Chile y México.
 
 
 == Changelog ==
+
+= 2.6 (2026-06-24) =
+Fixed reading of DNI/RUT fields with HPOS active
+Fixed fatal error on status change for non-Zipnova orders (PHP 8 compatibility)
+Added configurable max pickup points setting
 
 = 2.5 (2025-04-04) =
 Applied rebranding and renaming of Zippin to Zipnova

@@ -3,7 +3,7 @@
  * Plugin Name: Envíos con Zipnova para Woocommerce
  * Plugin URI: https://www.zipnova.com/productos/envios/integraciones/woocommerce
  * Description: Integra WooCommerce con Zipnova para realizar envíos con múltiples transportes a todo el país.
- * Version: 2.5
+ * Version: 2.6
  * Author: Zipnova
  * Author URI: https://www.zipnova.com/
  * Requires PHP: 7
@@ -24,7 +24,7 @@ define('ZIPPIN_DOMAIN', '');
 
 
 define('ZIPPIN_LOGGER_CONTEXT', serialize(array('source' => 'zippin')));
-define('ZIPPIN_VERSION', '2.5');
+define('ZIPPIN_VERSION', '2.6');
 
 // Setting plugin as HPOS compatible
 add_action( 'before_woocommerce_init', function() {
