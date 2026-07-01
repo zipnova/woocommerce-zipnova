@@ -281,6 +281,16 @@ class Helper
             $customer_document = '11111111';
         }
 
+        $customer_phone = $order->get_billing_phone();
+        if (empty($customer_phone)) {
+            $customer_phone = 'Sin telefono';
+        }
+
+        $customer_email = $order->get_billing_email();
+        if (empty($customer_email)) {
+            $customer_email = 'sin-email@zipnova.com';
+        }
+
         if ($order->has_shipping_address()) {
             $destination = array(
                 'name' => $order->get_shipping_first_name().' '.$order->get_shipping_last_name(),
@@ -291,8 +301,8 @@ class Helper
                 'city' => $order->get_shipping_city(),
                 'state' => Helper::get_state_name($order->get_shipping_state()),
                 'zipcode' => $order->get_shipping_postcode(),
-                'phone' => $order->get_billing_phone(),
-                'email' => $order->get_billing_email(),
+                'phone' => $customer_phone,
+                'email' => $customer_email,
                 'country' => $order->get_shipping_country(),
             );
 
@@ -306,8 +316,8 @@ class Helper
                 'city' => $order->get_billing_city(),
                 'state' => Helper::get_state_name($order->get_billing_state()),
                 'zipcode' => $order->get_billing_postcode(),
-                'phone' => $order->get_billing_phone(),
-                'email' => $order->get_billing_email(),
+                'phone' => $customer_phone,
+                'email' => $customer_email,
                 'country' => $order->get_billing_country(),
             );
 

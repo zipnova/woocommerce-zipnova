@@ -117,7 +117,7 @@ function process_order_status($order_id, $old_status, $new_status)
 
 function add_order_side_box()
 {
-    $screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+    $screen = class_exists( \Automattic\WooCommerce\Utilities\OrderUtil::class ) && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
         ? wc_get_page_screen_id( 'shop-order' )
         : 'shop_order';
 
@@ -204,7 +204,11 @@ function add_action_button($actions, $order)
 
 function add_button_css_file($hook)
 {
-    if ($hook !== 'edit.php') return;
+    $orders_list_hook = class_exists( \Automattic\WooCommerce\Utilities\OrderUtil::class ) && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled()
+        ? wc_get_page_screen_id( 'shop-order' )
+        : 'edit.php';
+
+    if ($hook !== $orders_list_hook) return;
     wp_enqueue_style('action-button.css', plugin_dir_url(__FILE__) . 'css/action-button.css', array(), 1.0);
 }
 

@@ -63,6 +63,8 @@ Podrás hacer envíos con transportes de Argentina, Chile y México.
 Fixed reading of DNI/RUT fields with HPOS active
 Fixed fatal error on status change for non-Zipnova orders (PHP 8 compatibility)
 Added configurable max pickup points setting
+Fixed HPOS compatibility in orders list action button and order detail meta box
+Added default phone/email values when missing on the order, so shipment creation doesn't fail
 
 = 2.5 (2025-04-04) =
 Applied rebranding and renaming of Zippin to Zipnova
