@@ -384,7 +384,7 @@ function settings_page_content()
         if ($account) {
             update_option('zippin_credentials_check',true);
         } else {
-            update_option('zippin_credentials_check',false);
+            wc_get_logger()->warning('Fallo al verificar la cuenta al guardar configuración: '.$connector->getLastError(), unserialize(ZIPPIN_LOGGER_CONTEXT));
         }
     }
 

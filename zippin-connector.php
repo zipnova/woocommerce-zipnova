@@ -330,7 +330,7 @@ class ZippinConnector
             }
 
             if ($response['response']['code'] != 200 && $response['response']['code'] != 201) {
-                if ($response['response']['code'] == 403) {
+                if (in_array($response['response']['code'], array(403, 404))) {
                     update_option('zippin_credentials_check',false);
                 }
                 // API Request failed
