@@ -59,7 +59,7 @@ Podrás hacer envíos con transportes de Argentina, Chile y México.
 
 == Changelog ==
 
-= 2.6 (2026-06-24) =
+= 2.6.0 (2026-06-24) =
 Fixed reading of DNI/RUT fields with HPOS active
 Fixed fatal error on status change for non-Zipnova orders (PHP 8 compatibility)
 Added configurable max pickup points setting
