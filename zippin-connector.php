@@ -167,7 +167,7 @@ class ZippinConnector
 
     public function get_account()
     {
-        if ($response = $this->call_api('GET', '/accounts/'.$this->get_account_id())) {
+        if ($response = $this->call_api('GET', '/accounts/'.$this->get_account_id(), array(), array(), true)) {
             return json_decode($response['body'], true);
 
         } else {
@@ -291,7 +291,7 @@ class ZippinConnector
     }
 
 
-    public function call_api($method = '', $endpoint = '', $params = array(), $headers = array())
+    public function call_api($method = '', $endpoint = '', $params = array(), $headers = array(), $invalidate_on_404 = false)
     {
         $zippin_domain = Helper::get_current_domain();
 
@@ -330,7 +330,7 @@ class ZippinConnector
             }
 
             if ($response['response']['code'] != 200 && $response['response']['code'] != 201) {
-                if (in_array($response['response']['code'], array(403, 404))) {
+                if ($response['response']['code'] == 403 || ($response['response']['code'] == 404 && $invalidate_on_404)) {
                     update_option('zippin_credentials_check',false);
                 }
                 // API Request failed

@@ -288,7 +288,7 @@ class Helper
 
         $customer_email = $order->get_billing_email();
         if (empty($customer_email)) {
-            $customer_email = 'sin-email@zipnova.com';
+            $customer_email = 'noreply@zipnova.com';
         }
 
         if ($order->has_shipping_address()) {

@@ -5,7 +5,7 @@ Tags: envios, zipnova, zippin, shipping, woocommerce
 Requires at least: 4.6
 Tested up to: 6.7.2
 Requires PHP: 7
-Stable tag: 2.6
+Stable tag: 2.6.0
 Language: Spanish
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
