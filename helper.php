@@ -254,9 +254,12 @@ class Helper
     {
         $address = Helper::get_address($order);
 
-        // Compatibilidad con facturante para obtener el DNI
-        if (!empty($order->billing_dni_facturante)) {
-            $customer_document = $order->billing_dni_facturante;
+        $customer_document = '';
+
+        // Compatibilidad con facturante para obtener el DNI (compatible con HPOS)
+        $facturante_document = $order->get_meta('billing_dni_facturante');
+        if (!empty($facturante_document)) {
+            $customer_document = $facturante_document;
         }
 
         // Compatibilidad con Contabilium para obtener el documento
@@ -265,14 +268,27 @@ class Helper
             $customer_document = $contabilium_document;
         }
 
-        // Si esta definido en el plugin, usar el campo personalizado de la orden
+        // Si esta definido en el plugin, usar el campo personalizado de la orden (compatible con HPOS)
         $zippin_document_field = get_option('zippin_document_field');
-        if (!empty($order->$zippin_document_field)) {
-            $customer_document = $order->$zippin_document_field;
+        if (!empty($zippin_document_field)) {
+            $field_value = $order->get_meta($zippin_document_field);
+            if (!empty($field_value)) {
+                $customer_document = $field_value;
+            }
         }
 
         if (empty($customer_document)) {
             $customer_document = '11111111';
+        }
+
+        $customer_phone = $order->get_billing_phone();
+        if (empty($customer_phone)) {
+            $customer_phone = 'Sin telefono';
+        }
+
+        $customer_email = $order->get_billing_email();
+        if (empty($customer_email)) {
+            $customer_email = 'sin-email@example.com';
         }
 
         if ($order->has_shipping_address()) {
@@ -285,8 +301,8 @@ class Helper
                 'city' => $order->get_shipping_city(),
                 'state' => Helper::get_state_name($order->get_shipping_state()),
                 'zipcode' => $order->get_shipping_postcode(),
-                'phone' => $order->get_billing_phone(),
-                'email' => $order->get_billing_email(),
+                'phone' => $customer_phone,
+                'email' => $customer_email,
                 'country' => $order->get_shipping_country(),
             );
 
@@ -300,8 +316,8 @@ class Helper
                 'city' => $order->get_billing_city(),
                 'state' => Helper::get_state_name($order->get_billing_state()),
                 'zipcode' => $order->get_billing_postcode(),
-                'phone' => $order->get_billing_phone(),
-                'email' => $order->get_billing_email(),
+                'phone' => $customer_phone,
+                'email' => $customer_email,
                 'country' => $order->get_billing_country(),
             );
 
