@@ -167,7 +167,7 @@ class ZippinConnector
 
     public function get_account()
     {
-        if ($response = $this->call_api('GET', '/accounts/'.$this->get_account_id())) {
+        if ($response = $this->call_api('GET', '/accounts/'.$this->get_account_id(), array(), array(), true)) {
             return json_decode($response['body'], true);
 
         } else {
@@ -291,7 +291,7 @@ class ZippinConnector
     }
 
 
-    public function call_api($method = '', $endpoint = '', $params = array(), $headers = array())
+    public function call_api($method = '', $endpoint = '', $params = array(), $headers = array(), $invalidate_on_404 = false)
     {
         $zippin_domain = Helper::get_current_domain();
 
@@ -300,7 +300,9 @@ class ZippinConnector
             $headers['Accept'] = 'application/json';
             $headers['Authorization'] = 'Basic '.base64_encode($this->get_api_key().':'.$this->get_api_secret());
 
-            $url = 'https://api.'.$zippin_domain['domain'].'/v2' . $endpoint;
+            $url = (defined('ZIPNOVA_API_BASE_URL') && ZIPNOVA_API_BASE_URL)
+                ? ZIPNOVA_API_BASE_URL . '/v2' . $endpoint
+                : 'https://api.'.$zippin_domain['domain'].'/v2' . $endpoint;
             $args = array(
                 'headers' => $headers,
                 'timeout' => 25
@@ -328,7 +330,7 @@ class ZippinConnector
             }
 
             if ($response['response']['code'] != 200 && $response['response']['code'] != 201) {
-                if ($response['response']['code'] == 403) {
+                if ($response['response']['code'] == 403 || ($response['response']['code'] == 404 && $invalidate_on_404)) {
                     update_option('zippin_credentials_check',false);
                 }
                 // API Request failed
