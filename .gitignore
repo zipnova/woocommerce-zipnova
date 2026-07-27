@@ -1,5 +1,5 @@
 /.idea/
 .DS_Store
 
-# Salida local de comandos de Claude (planes de testing, docs internas) — no se versiona
-/.claude/local/
+# Comandos y docs internas de Claude Code — no se versionan, solo viven local
+/.claude/
