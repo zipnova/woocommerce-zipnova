@@ -175,8 +175,9 @@ function zippin_init()
                         // Armado de rates
                         if ($result['result']['service_type']['code'] == 'pickup_point') {
                             $i=1;
+                            $max_pickup_points = intval(get_option('zippin_max_pickup_points', 3));
                             foreach ($result['result']['pickup_points'] as $point) {
-                                if ($i>3) { continue; }
+                                if ($i>$max_pickup_points) { continue; }
                                 $address = $point['location']['street'].' '.$point['location']['street_number'].', '.$point['location']['city'];
                                 $rate = array(
                                     'id' => 'zippin|' . (isset($result['code']) ? $result['code'] : '').'|'.$point['point_id'],

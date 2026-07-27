@@ -175,6 +175,7 @@ function advanced_feature_flags()
         echo '<p style="margin-bottom: 16px"><label><input type="checkbox" name="zippin_avoid_add_states" value="1"' . (get_option('zippin_avoid_add_states') == 1 ? ' checked' : '') . '> Compatibilidad: Evitar agregar estados/regiones/provincias faltantes. <br><small>Activa esta opción si tienes otro plugin que también agregue los estados que WooCommerce no trae</small>.</label></p> ';
     }
     echo '<p style="margin-bottom: 16px"><label><b>Campo personalizado con el DNI/RUT del cliente</b><br><small>Si tienes algún plugin o personalización para capturar el número de documento del destinatario, indica aquí el código del campo personalizado de la orden.</small><br><input type="text" name="zippin_document_field" placeholder="Indica el código del campo personalizado" value="'.(get_option('zippin_document_field')).'"></label></p> ';
+    echo '<p style="margin-bottom: 16px"><label><b>Cantidad máxima de puntos de retiro</b><br><small>Límite de opciones de puntos de retiro (pickup points) que se mostrarán al cliente en el checkout.</small><br><input type="number" min="1" name="zippin_max_pickup_points" value="'.intval(get_option('zippin_max_pickup_points', 3)).'"></label></p>';
 }
 
 function print_credentials()
@@ -383,7 +384,7 @@ function settings_page_content()
         if ($account) {
             update_option('zippin_credentials_check',true);
         } else {
-            update_option('zippin_credentials_check',false);
+            wc_get_logger()->warning('Fallo al verificar la cuenta al guardar configuración: '.$connector->getLastError(), unserialize(ZIPPIN_LOGGER_CONTEXT));
         }
     }
 
@@ -459,6 +460,11 @@ function settings_page_content()
     if (isset($_POST['zippin_document_field'])) {
         wp_verify_nonce($_REQUEST['zippin_wpnonce'], 'zippin_settings_save' );
         update_option('zippin_document_field', sanitize_text_field($_POST['zippin_document_field']));
+    }
+
+    if (isset($_POST['zippin_max_pickup_points'])) {
+        wp_verify_nonce($_REQUEST['zippin_wpnonce'], 'zippin_settings_save' );
+        update_option('zippin_max_pickup_points', max(1, filter_var($_POST['zippin_max_pickup_points'], FILTER_SANITIZE_NUMBER_INT)));
     }
 
     ?>
